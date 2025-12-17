@@ -8,6 +8,7 @@ const App = {
     init() {
         this.setupEventListeners();
         this.checkAuth();
+        this.initTheme();
     },
 
     // Setup event listeners
@@ -21,6 +22,11 @@ const App = {
         // Logout button
         document.getElementById('logoutBtn').addEventListener('click', () => {
             this.handleLogout();
+        });
+
+        // Theme toggle
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            this.toggleTheme();
         });
 
         // Toggle sidebar
@@ -86,6 +92,34 @@ const App = {
     // Update current date display
     updateDate() {
         document.getElementById('currentDate').textContent = Helpers.formatDate(new Date());
+    },
+
+    // Initialize theme
+    initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            const themeIcon = document.querySelector('#themeToggle i');
+            if (themeIcon) themeIcon.className = 'fas fa-sun';
+        }
+    },
+
+    // Toggle theme
+    toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.querySelector('#themeToggle i');
+        
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+            if (themeIcon) themeIcon.className = 'fas fa-sun';
+            this.showNotification('Dark mode activated', 'success');
+        } else {
+            localStorage.setItem('theme', 'light');
+            if (themeIcon) themeIcon.className = 'fas fa-moon';
+            this.showNotification('Light mode activated', 'success');
+        }
     },
 
     // Check authentication
